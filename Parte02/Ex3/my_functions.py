@@ -19,11 +19,11 @@ def isPrime(value):
     :param value: the number to test.
     :return: True or False
     """
-    print('\nReference number ' + str(value))
+    # print('\nReference number ' + str(value))
 
     for i in range(2, value):
         remainder = value % i
-        print(str(value) + ' / ' + str(i) + ' has remainder ' + str(remainder))
+        # print(str(value) + ' / ' + str(i) + ' has remainder ' + str(remainder))
         if remainder == 0:
             return False
 

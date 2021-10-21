@@ -4,7 +4,7 @@
 # IMPORT MODULES
 # --------------------------------------------------
 import readchar
-
+from my_functions import *
 
 # --------------------------------------------------
 # A simple python script to check if a number if prime.
@@ -13,20 +13,17 @@ import readchar
 # --------------------------------------------------
 
 
-def printAllCharsUpTo(stop_char):
-    # Convert to decimal representation
-    decimal_number = ord(stop_char)
-    for i in range(32, decimal_number + 1):
-        print('ASCII table - Decimal Representation: ' + str(i) + ' , char representation: ' + chr(i))
-
-
 def main():
 
-    print("Press any key of the keyboard.")
+    # # Exercise 4b
+    # print("Press any key of the keyboard.")
+    #
+    # # Read a key from keyboard
+    # stop_char = readchar.readkey()
+    # printAllCharsUpTo(stop_char)
 
-    # Read a key from keyboard
-    stop_char = readchar.readkey()
-    printAllCharsUpTo(stop_char)
+    # Exercise 4c
+    countNumbersUpto('X')
 
 if __name__ == "__main__":
     main()

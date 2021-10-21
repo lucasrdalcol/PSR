@@ -15,6 +15,7 @@ import argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-mn', '--maximum_number', type=int, default=100, help="Maximum number to test")
+ap.add_argument('-p', '--prints', action='store_true', help="Show prints at screen or not")
 args = vars(ap.parse_args())
 
 def main():
@@ -24,10 +25,12 @@ def main():
     for i in range(1, args['maximum_number']):
         if isPrime(i):
             counter = counter + 1
-            print(Fore.RED + Back.YELLOW + Style.DIM + 'Number ' + Fore.LIGHTMAGENTA_EX + Back.CYAN + Style.BRIGHT
-                  + str(i) + Fore.RED + Back.YELLOW + Style.DIM + ' is prime.' + Style.RESET_ALL)
+            if args['prints']:
+                print(Fore.RED + Back.YELLOW + Style.DIM + 'Number ' + Fore.LIGHTMAGENTA_EX + Back.CYAN + Style.BRIGHT
+                      + str(i) + Fore.RED + Back.YELLOW + Style.DIM + ' is prime.' + Style.RESET_ALL)
         else:
-            print('Number ' + str(i) + ' is not prime.')
+            if args['prints']:
+                print('Number ' + str(i) + ' is not prime.')
 
     print(Fore.BLUE + 'Between 1 and ' + str(args['maximum_number']) + ' we have ' + str(
         counter) + ' prime numbers.' + Style.RESET_ALL)

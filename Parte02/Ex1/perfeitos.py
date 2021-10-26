@@ -11,7 +11,8 @@ from colorama import Fore, Back, Style
 # PSR, October 2021.
 # --------------------------------------------------
 
-maximum_number = 100 # Maximum number to test
+maximum_number = 100  # Maximum number to test
+
 
 def getDividers(value):
     """
@@ -30,6 +31,7 @@ def getDividers(value):
 
     return dividers
 
+
 def isPerfect(value):
     """
     Checks whether the number value is perfect or not.
@@ -44,14 +46,20 @@ def isPerfect(value):
     else:
         return False
 
+
 def main():
+
+    # Initialize with a print
     print("Starting to compute perfect numbers up to " + str(maximum_number))
 
+    # Cycle all numbers starting from 1 to maximum_number.
     for i in range(1, maximum_number):
+        # Check if the number is perfect.
         if isPerfect(i):
             print(Fore.GREEN + Back.BLACK + Style.DIM + 'Number ' + str(i) + ' is perfect.' + Style.RESET_ALL)
         else:
             print(Fore.RED + Back.BLACK + Style.DIM + 'Number ' + str(i) + ' is not perfect.' + Style.RESET_ALL)
+
 
 if __name__ == "__main__":
     main()

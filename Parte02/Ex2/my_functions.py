@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # --------------------------------------------------
-# My functions of Exercise 2
+# My functions of Exercise 2 of Parte02
 # Lucas Rodrigues Dal'Col
 # PSR, October 2021.
 # --------------------------------------------------

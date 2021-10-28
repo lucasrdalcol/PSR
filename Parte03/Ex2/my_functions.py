@@ -81,7 +81,7 @@ def multiplyComplex(x, y):
     # return real_part, imag_part
 
 
-def printComplex(x):
+def printComplex(x, prefix=''):
     """
     Print a complex numbers
     :param x: A complex number given in as a tuple of size two. The first element is the real part and the second is
@@ -91,4 +91,4 @@ def printComplex(x):
     # Get real and imaginary parts of the complex number given
     real_x, imag_x = x
 
-    print(str(real_x) + ' + ' + str(imag_x) + 'i')
+    print(prefix + str(real_x) + ' + ' + str(imag_x) + 'i')

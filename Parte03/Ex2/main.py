@@ -18,16 +18,16 @@ def main():
     # define two complex numbers as tuples of size two
     c1 = (5, 3)
     c2 = (-2, 7)
-    printComplex(c1)
-    printComplex(c2)
+    printComplex(c1, 'c1 = ')
+    printComplex(c2, 'c2 = ')
 
     # Test addComplex function
     c3 = addComplex(c1, c2)
-    printComplex(c3)
+    printComplex(c3, 'c1 + c2 = ')
 
     # Test multiplyComplex function
     c4 = multiplyComplex(c1, c2)
-    printComplex(c4)
+    printComplex(c4, 'c1 * c2 = ')
 
 
 if __name__ == "__main__":

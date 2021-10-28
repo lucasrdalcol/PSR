@@ -33,11 +33,11 @@ def main():
 
     # Test addComplex function
     c3 = addComplex(c1, c2)
-    printComplex(c3)
+    printComplex(c3, 'c1 + c2 = ')
 
     # Test multiplyComplex function
     c4 = multiplyComplex(c1, c2)
-    printComplex(c4)
+    printComplex(c4, 'c1 * c2 = ')
 
 
 if __name__ == "__main__":

@@ -3,10 +3,6 @@
 # --------------------------------------------------
 # IMPORT MODULES
 # --------------------------------------------------
-import readchar
-from colorama import Fore, Back, Style
-from time import time
-from collections import namedtuple
 
 
 # ------------------------

@@ -3,12 +3,7 @@
 # --------------------------------------------------
 # IMPORT MODULES
 # --------------------------------------------------
-import readchar
-import colorama
 from my_classes import *
-from time import time, ctime
-import math
-from collections import namedtuple
 
 
 # --------------------------------------------------

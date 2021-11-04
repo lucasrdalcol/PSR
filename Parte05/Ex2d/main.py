@@ -4,6 +4,7 @@
 # IMPORT MODULES
 # --------------------------------------------------
 import argparse
+from copy import copy
 import cv2
 
 
@@ -13,7 +14,6 @@ import cv2
 # PSR, October 2021.
 # --------------------------------------------------
 import numpy as np
-from numpy import uint8
 
 
 def main():
@@ -31,16 +31,25 @@ def main():
     cv2.namedWindow('Original', cv2.WINDOW_NORMAL)
     cv2.imshow('Original', image_rgb)  # Display the image
 
-    ranges = {'b': {'min': 20, 'max': 150},
-              'g': {'min': 20, 'max': 150},
-              'r': {'min': 20, 'max': 150}}
+    ranges = {'b': {'min': 0, 'max': 100},
+              'g': {'min': 80, 'max': 256},
+              'r': {'min': 0, 'max': 100}}
 
     mins = np.array([ranges['b']['min'], ranges['g']['min'], ranges['r']['min']])
     maxs = np.array([ranges['b']['max'], ranges['g']['max'], ranges['r']['max']])
-    image_processed = cv2.inRange(image_rgb, mins, maxs)
+    mask = cv2.inRange(image_rgb, mins, maxs)
 
-    cv2.namedWindow('Detect green box', cv2.WINDOW_NORMAL)
-    cv2.imshow('Detect green box', image_processed)  # Display the image
+    # Convert using numpy using uint8 to bool
+    mask = mask.astype(np.bool)
+
+    image_processed = copy(image_rgb)
+    image_processed[~mask] = (image_processed[~mask] * 0.2).astype(np.uint8)
+
+    cv2.namedWindow('Mask', cv2.WINDOW_NORMAL)
+    cv2.imshow('Mask', 255 * mask.astype(np.uint8))  # Display the image
+
+    cv2.namedWindow('Image Processed', cv2.WINDOW_NORMAL)
+    cv2.imshow('Image Processed', image_processed)  # Display the image
 
     cv2.waitKey(0)  # wait a key
 

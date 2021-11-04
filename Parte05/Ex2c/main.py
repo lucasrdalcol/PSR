@@ -27,25 +27,18 @@ def main():
 
     # Load image with given filename and show
     image_filename = args['filename']
-    image = cv2.imread(image_filename, cv2.IMREAD_COLOR)
+    image_rgb = cv2.imread(image_filename, cv2.IMREAD_COLOR)
     cv2.namedWindow('Original', cv2.WINDOW_NORMAL)
-    cv2.imshow('Original', image)  # Display the image
+    cv2.imshow('Original', image_rgb)  # Display the image
 
-    # Convert colored image to grayscale and show
-    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    cv2.namedWindow('Grayscale', cv2.WINDOW_NORMAL)
-    cv2.imshow('Grayscale', image_gray)  # Display the image
+    b, g, r = cv2.split(image_rgb)
+    _, b_thresholded = cv2.threshold(b, 50, 255, cv2.THRESH_BINARY)
+    _, g_thresholded = cv2.threshold(g, 100, 255, cv2.THRESH_BINARY)
+    _, r_thresholded = cv2.threshold(r, 150, 255, cv2.THRESH_BINARY)
 
-    # Binarize image and show
-    # # Exercise 2a): binarize using cv2.thresholded
-    # retval, image_thresholded = cv2.threshold(image_gray, 128, 255, cv2.THRESH_BINARY)
-
-    # Exercise 2b): binarize using comparison
-    image_thresholded = image_gray > 128
-    image_thresholded = image_thresholded.astype(uint8)
-
-    cv2.namedWindow('Binarized', cv2.WINDOW_NORMAL)
-    cv2.imshow('Binarized', image_thresholded)  # Display the image
+    image_thresholded = cv2.merge((b_thresholded, g_thresholded, r_thresholded))
+    cv2.namedWindow('After binarize each channel', cv2.WINDOW_NORMAL)
+    cv2.imshow('After binarize each channel', image_thresholded)  # Display the image
 
     cv2.waitKey(0)  # wait a key
 

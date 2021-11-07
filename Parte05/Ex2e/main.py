@@ -4,6 +4,7 @@
 # IMPORT MODULES
 # --------------------------------------------------
 import argparse
+from copy import copy
 import cv2
 
 
@@ -13,7 +14,6 @@ import cv2
 # PSR, October 2021.
 # --------------------------------------------------
 import numpy as np
-from numpy import uint8
 
 
 def main():
@@ -31,18 +31,26 @@ def main():
     cv2.namedWindow('Original', cv2.WINDOW_NORMAL)
     cv2.imshow('Original', image_rgb)  # Display the image
 
-    # Split the RGB image to have all the three channels
-    b, g, r = cv2.split(image_rgb)
+    # Convert image to HSV color space and show
+    image_hsv = cv2.cvtColor(image_rgb, cv2.COLOR_BGR2HSV)
+    cv2.namedWindow('HSV', cv2.WINDOW_NORMAL)
+    cv2.imshow('HSV', image_hsv)  # Display the image
 
-    # Apply a threshold to binarize each of the channels
-    _, b_thresholded = cv2.threshold(b, 50, 255, cv2.THRESH_BINARY)
-    _, g_thresholded = cv2.threshold(g, 100, 255, cv2.THRESH_BINARY)
-    _, r_thresholded = cv2.threshold(r, 150, 255, cv2.THRESH_BINARY)
+    # Establish ranges for each channel to create a mask
+    ranges = {'h': {'min': 60, 'max': 75},
+              's': {'min': 175, 'max': 255},
+              'v': {'min': 85, 'max': 135}}
 
-    # Merge back together all channels
-    image_thresholded = cv2.merge((b_thresholded, g_thresholded, r_thresholded))
-    cv2.namedWindow('After binarize each channel', cv2.WINDOW_NORMAL)
-    cv2.imshow('After binarize each channel', image_thresholded)  # Display the image
+    # Convert the dict structure created before to numpy arrays, because opencv uses it.
+    mins = np.array([ranges['h']['min'], ranges['s']['min'], ranges['v']['min']])
+    maxs = np.array([ranges['h']['max'], ranges['s']['max'], ranges['v']['max']])
+
+    # Create mask using cv2.inRange. The output is still in uint8
+    mask = cv2.inRange(image_hsv, mins, maxs)
+
+    # Show mask image
+    cv2.namedWindow('Mask', cv2.WINDOW_NORMAL)
+    cv2.imshow('Mask', mask)  # Display the image
 
     cv2.waitKey(0)  # wait a key
 

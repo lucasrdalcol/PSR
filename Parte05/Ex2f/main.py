@@ -7,7 +7,6 @@ import argparse
 from copy import copy
 import cv2
 
-
 # --------------------------------------------------
 # A simple python script to load and read an image using OpenCV
 # Lucas Rodrigues Dal'Col
@@ -43,9 +42,18 @@ def main():
     # Create mask using cv2.inRange. The output is still in uint8
     mask = cv2.inRange(image_rgb, mins, maxs)
 
-    # Show mask image
+    # Convert using numpy from uint8 to bool
+    mask = mask.astype(bool)
+
+    # Process a copy of the image using the mask created.
+    image_processed = copy(image_rgb)
+    image_processed[mask] = image_processed[mask] + 245  # Be careful with under 0 and over 255 when summing.
+
     cv2.namedWindow('Mask', cv2.WINDOW_NORMAL)
-    cv2.imshow('Mask', mask)  # Display the image
+    cv2.imshow('Mask', 255 * mask.astype(np.uint8))  # Display the image
+
+    cv2.namedWindow('Image Processed', cv2.WINDOW_NORMAL)
+    cv2.imshow('Image Processed', image_processed)  # Display the image
 
     cv2.waitKey(0)  # wait a key
 

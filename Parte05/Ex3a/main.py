@@ -5,15 +5,27 @@
 # --------------------------------------------------
 import argparse
 import cv2
-
+import numpy as np
 
 # --------------------------------------------------
 # A simple python script to load and read an image using OpenCV
 # Lucas Rodrigues Dal'Col
 # PSR, October 2021.
 # --------------------------------------------------
-import numpy as np
-from numpy import uint8
+
+# Global variables
+window_name = 'Binarizing image through a track bar'
+
+
+def onTrackbar(threshold):
+    """
+    Binarize image using a trackbar callback function
+    :param threshold: the threshold of the binarization. data type: int
+    """
+
+    # Binarize image and show using the given threshold at the time
+    _, image_thresholded = cv2.threshold(image_gray, threshold, 255, cv2.THRESH_BINARY)
+    cv2.imshow(window_name, image_thresholded)  # Display the image again
 
 
 def main():
@@ -22,7 +34,7 @@ def main():
     # ---------------------------------------------------
 
     ap = argparse.ArgumentParser()
-    ap.add_argument('-f', '--filename', required=True, help="Input image filename")
+    ap.add_argument('-f', '--filename', required=True, help="Input full path image filename")
     args = vars(ap.parse_args())
 
     # Load image with given filename and show
@@ -32,21 +44,20 @@ def main():
     cv2.imshow('Original', image)  # Display the image
 
     # Convert colored image to grayscale and show
+    global image_gray  # Use global variable for the function onTrackbar
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     cv2.namedWindow('Grayscale', cv2.WINDOW_NORMAL)
     cv2.imshow('Grayscale', image_gray)  # Display the image
 
-    # Binarize image and show
-    # # Exercise 2a): binarize using cv2.thresholded
-    # retval, image_thresholded = cv2.threshold(image_gray, 128, 255, cv2.THRESH_BINARY)
+    # Create window first
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
-    # Exercise 2b): binarize using comparison
-    image_thresholded = image_gray > 128
-    image_thresholded = 255*image_thresholded.astype(uint8)
+    # Create a trackbar to control the threshold of the binarization
+    trackbar_name = 'Binarize threshold'
+    cv2.createTrackbar(trackbar_name, window_name, 0, 255, onTrackbar)
 
-    # Show binarize image
-    cv2.namedWindow('Binarized', cv2.WINDOW_NORMAL)
-    cv2.imshow('Binarized', image_thresholded)  # Display the image
+    # Initialize binarized image with threshold equal to 0
+    onTrackbar(0)
 
     cv2.waitKey(0)  # wait a key
 

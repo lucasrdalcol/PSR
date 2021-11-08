@@ -4,10 +4,10 @@
 # IMPORT MODULES
 # --------------------------------------------------
 import argparse
+import json
 import cv2
 import numpy as np
 from functools import partial
-
 
 # --------------------------------------------------
 # A simple python script to load and read an image using OpenCV
@@ -15,53 +15,76 @@ from functools import partial
 # PSR, October 2021.
 # --------------------------------------------------
 
-# Global variables
+# ---------------------------------------------------
+# Global Variables
+# ---------------------------------------------------
 min_BH = 0
-max_BH = 0
+max_BH = 255
 min_GS = 0
-max_GS = 0
+max_GS = 255
 min_RV = 0
-max_RV = 0
+max_RV = 255
 
 
-def onTrackbar(threshold, image_gray, window_name):
+# Define functions of trackbars
+def minOnTrackbarBH(threshold):
     """
-    Binarize image using a trackbar callback function
-    :param threshold: the threshold of the binarization. data type: int
+    Trackbar for the minimum threshold for the Blue (RGB) or Hue (HSV) channel
+    :param threshold: the threshold for the channel in question. Datatype: int
     """
-
-    # Binarize image and show using the given threshold at the time
-    _, image_thresholded = cv2.threshold(image_gray, threshold, 255, cv2.THRESH_BINARY)
-    cv2.imshow(window_name, image_thresholded)  # Display the image again
-
-
-def minOnTrackbarBH(var):
     global min_BH
-    min_BH = var
-    print(min_BH)
-    return min_BH
+    min_BH = threshold
+    print('Selected threshold ' + str(min_BH) + ' for limit min B/H')
 
 
-def maxOnTrackbarBH(var):
+def maxOnTrackbarBH(threshold):
+    """
+    Trackbar for the maximum threshold for the Blue (RGB) or Hue (HSV) channel    
+    :param threshold: the threshold for the channel in question. Datatype: int
+    """
     global max_BH
-    max_BH = var
-    return max_BH
+    max_BH = threshold
+    print('Selected threshold ' + str(max_BH) + ' for limit max B/H')
 
 
-def minOnTrackbarGS(var):
-    return min_GS
+def minOnTrackbarGS(threshold):
+    """
+    Trackbar for the minimum threshold for the Green (RGB) or Saturation (HSV) channel
+    :param threshold: the threshold for the channel in question. Datatype: int
+    """
+    global min_GS
+    min_GS = threshold
+    print('Selected threshold ' + str(min_GS) + ' for limit min G/S')
 
 
-def maxOnTrackbarGS(var):
-    return max_GS
+def maxOnTrackbarGS(threshold):
+    """
+    Trackbar for the maximum threshold for the Green (RGB) or Saturation (HSV) channel
+    :param threshold: the threshold for the channel in question. Datatype: int
+    """
+    global max_GS
+    max_GS = threshold
+    print('Selected threshold ' + str(max_GS) + ' for limit max G/S')
 
 
-def minOnTrackbarRV(var):
-    return min_RV
+def minOnTrackbarRV(threshold):
+    """
+    Trackbar for the minimum threshold for the Red (RGB) or Value (HSV) channel    
+    :param threshold: the threshold for the channel in question. Datatype: int
+    """
+    global min_RV
+    min_RV = threshold
+    print('Selected threshold ' + str(min_RV) + ' for limit min R/V')
 
 
-def maxOnTrackbarRV(var):
-    return max_RV
+def maxOnTrackbarRV(threshold):
+    """
+    Trackbar for the maximum threshold for the Red (RGB) or Value (HSV) channel
+    :param threshold: the threshold for the channel in question. Datatype: int
+    """
+    global max_RV
+    max_RV = threshold
+    print('Selected threshold ' + str(max_RV) + ' for limit max R/V')
 
 
 # function which will be called on mouse input
@@ -71,8 +94,8 @@ def onMouse(action, x, y, flags, param):
     :param action: to click a button in the mouse, specifically the left button down
     :param x: the x coordinate of the image where you clicked
     :param y: the y coordinate of the image where you clicked
-    :param flags:
-    :param param:
+    :param flags: Not used, but needed to the function works
+    :param param: Not used, but needed to the function works
     """
     if action == cv2.EVENT_LBUTTONDOWN:
         print('The coordinates of where you clicked are: x = ' + str(x) + ' , y = ' + str(y))
@@ -95,7 +118,8 @@ def main():
     cv2.imshow('Original', image_rgb)  # Display the image
 
     # Convert image to HSV color space if wanted
-    image_hsv = cv2.cvtColor(image_rgb, cv2.COLOR_BGR2HSV)
+    if args['hsv']:
+        image_hsv = cv2.cvtColor(image_rgb, cv2.COLOR_BGR2HSV)
 
     # Create window first
     window_name = 'Segmented'
@@ -109,6 +133,12 @@ def main():
     cv2.createTrackbar('min R/V', window_name, 0, 255, minOnTrackbarRV)
     cv2.createTrackbar('max R/V', window_name, 0, 255, maxOnTrackbarRV)
 
+    # Set the trackbar position to 255 for maximum trackbars
+    cv2.setTrackbarPos('max B/H', window_name, 255)
+    cv2.setTrackbarPos('max G/S', window_name, 255)
+    cv2.setTrackbarPos('max R/V', window_name, 255)
+
+    # Initialize trackbars
     minOnTrackbarBH(0)
     maxOnTrackbarBH(255)
     minOnTrackbarGS(0)
@@ -116,18 +146,31 @@ def main():
     minOnTrackbarRV(0)
     maxOnTrackbarRV(255)
 
+    # While cycle to update the values of the trackbar at the time
     while True:
-        # Establish ranges for each channel to create a mask
-        ranges = {'b': {'min': min_BH, 'max': max_BH},
-                  'g': {'min': min_GS, 'max': max_GS},
-                  'r': {'min': min_RV, 'max': max_RV}}
+        # Get ranges for each channel from trackbar
+        if not args['hsv']:
+            ranges = {'B': {'min': min_BH, 'max': max_BH},
+                      'G': {'min': min_GS, 'max': max_GS},
+                      'R': {'min': min_RV, 'max': max_RV}}
+        else:
+            ranges = {'H': {'min': min_BH, 'max': max_BH},
+                      'S': {'min': min_GS, 'max': max_GS},
+                      'V': {'min': min_RV, 'max': max_RV}}
 
         # Convert the dict structure created before to numpy arrays, because opencv uses it.
-        mins = np.array([ranges['b']['min'], ranges['g']['min'], ranges['r']['min']])
-        maxs = np.array([ranges['b']['max'], ranges['g']['max'], ranges['r']['max']])
+        if not args['hsv']:
+            mins = np.array([ranges['B']['min'], ranges['G']['min'], ranges['R']['min']])
+            maxs = np.array([ranges['B']['max'], ranges['G']['max'], ranges['R']['max']])
+        else:
+            mins = np.array([ranges['H']['min'], ranges['S']['min'], ranges['V']['min']])
+            maxs = np.array([ranges['H']['max'], ranges['S']['max'], ranges['V']['max']])
 
         # Create mask using cv2.inRange. The output is still in uint8
-        segmented = cv2.inRange(image_rgb, mins, maxs)
+        if not args['hsv']:
+            segmented = cv2.inRange(image_rgb, mins, maxs)
+        else:
+            segmented = cv2.inRange(image_hsv, mins, maxs)
 
         # Show segmented image
         cv2.imshow(window_name, segmented)  # Display the image
@@ -135,7 +178,18 @@ def main():
         # Get the coordinates of where you clicked in the image
         cv2.setMouseCallback(window_name, onMouse)
 
-        cv2.waitKey(0)  # wait a key
+        key = cv2.waitKey(10)  # Wait a key to stop the program, the waitKey is only waiting 10 ms.
+
+        # Stop the cycle if 'q' is pressed and save the ranges dictionary
+        if key == ord('q'):
+            print('Letter q (quit) pressed, exiting the program and saving ranges')
+
+            file_name = 'ranges.json'
+            with open(file_name, 'w') as file_handle:
+                print("writing dictionary 'ranges' to file " + file_name)
+                json.dump(ranges, file_handle)  # ranges is the dictionary
+
+            break
 
 
 if __name__ == "__main__":

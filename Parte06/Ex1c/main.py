@@ -61,9 +61,16 @@ def main():
           '\nPress b to change to blue color.'
           '\nInitializing with red color as default.')
 
+    # Initialize window
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    # Paint where the mouse clicked
+    cv2.setMouseCallback(window_name, onMouse, param=blank_image)
+
+    # ---------------------------------------------------
+    # Execution
+    # ---------------------------------------------------
     while True:
         # Show image at every cycle
-        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
         cv2.imshow(window_name, blank_image)  # Display the image
 
         key = cv2.waitKey(10)
@@ -80,9 +87,6 @@ def main():
         elif key == ord('q'):
             print('Letter q (quit) pressed, exiting the program')
             break
-
-        # Paint where the mouse clicked
-        cv2.setMouseCallback(window_name, onMouse, param=blank_image)
 
 
 if __name__ == "__main__":

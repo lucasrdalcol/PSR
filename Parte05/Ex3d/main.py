@@ -18,12 +18,12 @@ from functools import partial
 # ---------------------------------------------------
 # Global Variables
 # ---------------------------------------------------
-min_BH = 0
-max_BH = 255
-min_GS = 0
-max_GS = 255
-min_RV = 0
-max_RV = 255
+min_B = 0
+max_B = 255
+min_G = 0
+max_G = 255
+min_R = 0
+max_R = 255
 
 
 # Define functions of trackbars
@@ -32,7 +32,7 @@ def minOnTrackbarBH(threshold):
     Trackbar for the minimum threshold for the Blue (RGB) or Hue (HSV) channel
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global min_BH
+    global min_B
     min_BH = threshold
     print('Selected threshold ' + str(min_BH) + ' for limit min B/H')
 
@@ -42,7 +42,7 @@ def maxOnTrackbarBH(threshold):
     Trackbar for the maximum threshold for the Blue (RGB) or Hue (HSV) channel    
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global max_BH
+    global max_B
     max_BH = threshold
     print('Selected threshold ' + str(max_BH) + ' for limit max B/H')
 
@@ -52,7 +52,7 @@ def minOnTrackbarGS(threshold):
     Trackbar for the minimum threshold for the Green (RGB) or Saturation (HSV) channel
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global min_GS
+    global min_G
     min_GS = threshold
     print('Selected threshold ' + str(min_GS) + ' for limit min G/S')
 
@@ -62,7 +62,7 @@ def maxOnTrackbarGS(threshold):
     Trackbar for the maximum threshold for the Green (RGB) or Saturation (HSV) channel
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global max_GS
+    global max_G
     max_GS = threshold
     print('Selected threshold ' + str(max_GS) + ' for limit max G/S')
 
@@ -72,7 +72,7 @@ def minOnTrackbarRV(threshold):
     Trackbar for the minimum threshold for the Red (RGB) or Value (HSV) channel    
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global min_RV
+    global min_R
     min_RV = threshold
     print('Selected threshold ' + str(min_RV) + ' for limit min R/V')
 
@@ -82,7 +82,7 @@ def maxOnTrackbarRV(threshold):
     Trackbar for the maximum threshold for the Red (RGB) or Value (HSV) channel
     :param threshold: the threshold for the channel in question. Datatype: int
     """
-    global max_RV
+    global max_R
     max_RV = threshold
     print('Selected threshold ' + str(max_RV) + ' for limit max R/V')
 
@@ -138,25 +138,20 @@ def main():
     cv2.setTrackbarPos('max G/S', window_name, 255)
     cv2.setTrackbarPos('max R/V', window_name, 255)
 
-    # Initialize trackbars
-    minOnTrackbarBH(0)
-    maxOnTrackbarBH(255)
-    minOnTrackbarGS(0)
-    maxOnTrackbarGS(255)
-    minOnTrackbarRV(0)
-    maxOnTrackbarRV(255)
-
+    # ---------------------------------------------------
+    # Execution
+    # ---------------------------------------------------
     # While cycle to update the values of the trackbar at the time
     while True:
         # Get ranges for each channel from trackbar
         if not args['hsv']:
-            ranges = {'B': {'min': min_BH, 'max': max_BH},
-                      'G': {'min': min_GS, 'max': max_GS},
-                      'R': {'min': min_RV, 'max': max_RV}}
+            ranges = {'B': {'min': min_B, 'max': max_B},
+                      'G': {'min': min_G, 'max': max_G},
+                      'R': {'min': min_R, 'max': max_R}}
         else:
-            ranges = {'H': {'min': min_BH, 'max': max_BH},
-                      'S': {'min': min_GS, 'max': max_GS},
-                      'V': {'min': min_RV, 'max': max_RV}}
+            ranges = {'H': {'min': min_B, 'max': max_B},
+                      'S': {'min': min_G, 'max': max_G},
+                      'V': {'min': min_R, 'max': max_R}}
 
         # Convert the dict structure created before to numpy arrays, because opencv uses it.
         if not args['hsv']:
@@ -178,7 +173,7 @@ def main():
         # Get the coordinates of where you clicked in the image
         cv2.setMouseCallback(window_name, onMouse)
 
-        key = cv2.waitKey(10)  # Wait a key to stop the program, the waitKey is only waiting 10 ms.
+        key = cv2.waitKey(1)  # Wait a key to stop the program, the waitKey is only waiting 10 ms.
 
         # Stop the cycle if 'q' is pressed and save the ranges dictionary
         if key == ord('q'):

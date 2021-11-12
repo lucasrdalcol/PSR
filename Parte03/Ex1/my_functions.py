@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
 # --------------------------------------------------
-# IMPORT MODULES
+# Import Modules
 # --------------------------------------------------
 from time import time
 
 
 # ------------------------
-## FUNCTION DEFINITION ##
+# Function Definition
 # ------------------------
 def tic():
     """

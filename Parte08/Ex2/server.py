@@ -4,6 +4,7 @@
 # IMPORT MODULES
 # --------------------------------------------------
 import socket
+from dog_lib import Dog
 
 
 # --------------------------------------------------
@@ -40,6 +41,19 @@ def main():
                 data = connection.recv(64)
                 if data:
                     print("Data: %s" % data)  # output received data
+
+                    unformated = data.decode('utf-8')
+                    print('Unformated message: ' + unformated)
+                    # Unmarshalling/deserializing
+                    messages = unformated.split(',')
+                    print(messages)
+
+                    dog = Dog(name=messages[0], color=messages[1], age=messages[2])
+                    for brother in messages[3:]:
+                        dog.addBrother(brother)
+                    print(dog)
+
+
                 else:
                     print("no more data.")  # no more data -- quit the loop
                     break

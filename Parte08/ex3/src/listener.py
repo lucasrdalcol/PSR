@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# --------------------------------------------------
+# LICENSE
+# --------------------------------------------------
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -36,6 +40,9 @@
 ## Simple talker demo that listens to std_msgs/Strings published 
 ## to the 'chatter' topic
 
+# --------------------------------------------------
+# IMPORT MODULES
+# --------------------------------------------------
 import rospy
 from std_msgs.msg import String
 

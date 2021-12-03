@@ -46,14 +46,16 @@
 import argparse
 import rospy
 from std_msgs.msg import String
+from ex4.msg import Dog
 
 
-def callbackMessageReceived(data):
+def callbackMessageReceived(msg):
     """
     Function that is called when the message arrives at the subscriber
-    :param data:
+    :param msg:
     """
-    rospy.loginfo(rospy.get_caller_id() + ' You said: ' + data.data)  # Print the message
+    rospy.loginfo('I received a dog named ' + msg.name + ', which is ' + str(msg.age) + ' years old and is '
+                  + msg.color + '. His brothers are: ' + str(msg.brothers))  # Print the message
 
 
 def listener():
@@ -73,7 +75,7 @@ def listener():
 
     rospy.init_node('listener', anonymous=True)  # Initialize the node
     for topic in args['topic']:
-        rospy.Subscriber(topic, String, callbackMessageReceived)  # Subscribe the node to the specified topic
+        rospy.Subscriber(topic, Dog, callbackMessageReceived)  # Subscribe the node to the specified topic
 
     # ----------------------------------
     # Execution

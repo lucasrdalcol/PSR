@@ -37,7 +37,7 @@
 #
 # Revision $Id$
 
-## Simple talker demo that listens to std_msgs/Strings published 
+## Simple talker demo that published std_msgs/Strings messages
 ## to the 'chatter' topic
 
 # --------------------------------------------------
@@ -46,41 +46,50 @@
 import argparse
 import rospy
 from std_msgs.msg import String
+from ex4.msg import Dog
 
 
-def callbackMessageReceived(data):
-    """
-    Function that is called when the message arrives at the subscriber
-    :param data:
-    """
-    rospy.loginfo(rospy.get_caller_id() + ' You said: ' + data.data)  # Print the message
-
-
-def listener():
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
-
+def talker():
     # ----------------------------------
     # Initialization
     # ----------------------------------
     ap = argparse.ArgumentParser()
-    ap.add_argument('-t', '--topic', type=str, action='append', required=True,
-                    help="Define the name of the topic that you want to subscribe")
+    ap.add_argument('-r', '--rate', type=float, default=10, help="Define time rate in Hertz")
+    ap.add_argument('-t', '--topic', type=str, required=True,
+                    help="Define the name of the topic that you want to publish")
+    # ap.add_argument('-m', '--message', type=str, default='I do not know what to say', help="Define the message to be "
+    #                                                                                        "sent")
     args = vars(ap.parse_args())
 
-    rospy.init_node('listener', anonymous=True)  # Initialize the node
-    for topic in args['topic']:
-        rospy.Subscriber(topic, String, callbackMessageReceived)  # Subscribe the node to the specified topic
+    rospy.init_node('talker', anonymous=True)  # Initialize the node
+    pub = rospy.Publisher(args['topic'], Dog, queue_size=10)
+    # pub2 = rospy.Publisher('A17', String, queue_size=10)
+    rate = rospy.Rate(args['rate'])  # time rate of the message
 
     # ----------------------------------
     # Execution
     # ----------------------------------
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+    while not rospy.is_shutdown():
+        # # Sent message from argparse
+        # message = args['message']  # Message to be sent
+        # rospy.loginfo(message)  # print the message in the terminal of the talker
+        # pub2.publish(message)  # publish the message in the topic
+
+        # Sent dog message
+        dog = Dog()
+        dog.name = 'max'
+        dog.age = 7
+        dog.color = 'black'
+        dog.brothers.append('Lily')
+        dog.brothers.append('Boby')
+        rospy.loginfo('Here it goes my dog.')
+        pub.publish(dog)
+
+        rate.sleep()
 
 
 if __name__ == '__main__':
-    listener()
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass

@@ -43,18 +43,35 @@
 # --------------------------------------------------
 # IMPORT MODULES
 # --------------------------------------------------
+import argparse
 import rospy
 from std_msgs.msg import String
 
 
 def talker():
-    pub = rospy.Publisher('chatter', String, queue_size=10)
-    rospy.init_node('talker', anonymous=True)
-    rate = rospy.Rate(10)  # 10hz
+    # ----------------------------------
+    # Initialization
+    # ----------------------------------
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-r', '--rate', type=float, default=10, help="Define time rate in Hertz")
+    ap.add_argument('-t', '--topic', type=str, required=True, action='append',
+                    help="Define the name of the topic that you want to publish")
+    ap.add_argument('-m', '--message', type=str, default='I do not know what to say', help="Define the message to be "
+                                                                                           "sent")
+    args = vars(ap.parse_args())
+
+    rospy.init_node('talker', anonymous=True)  # Initialize the node
+    pubs = [rospy.Publisher(topic, String, queue_size=10) for topic in args['topic']]
+    rate = rospy.Rate(args['rate'])  # time rate of the message
+
+    # ----------------------------------
+    # Execution
+    # ----------------------------------
     while not rospy.is_shutdown():
-        hello_str = "hello world %s" % rospy.get_time()
-        rospy.loginfo(hello_str)
-        pub.publish(hello_str)
+        message = args['message']  # Message to be sent
+        rospy.loginfo(message)  # print the message in the terminal of the talker
+        for pub in pubs:
+            pub.publish(message)  # publish the message in the topic
         rate.sleep()
 
 

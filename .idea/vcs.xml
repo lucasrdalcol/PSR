@@ -2,8 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Parte10/openni2_camera" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Parte10/rgbd_launch" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../PSR_Assignment1_P2_G8" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../PSR_Assignment2_P2_G8" vcs="Git" />
   </component>

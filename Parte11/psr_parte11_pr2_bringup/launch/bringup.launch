@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find psr_parte11_pr2_bringup)/launch/robot.launch" />
+    <include file="$(find psr_parte11_pr2_bringup)/launch/visualize.launch" />
+</launch>

@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="scara_robot">
+
+  <xacro:property name="height_cylinders" value="0.5" />
+  <xacro:property name="height_cylinder_EE" value="1.5" />
+  <xacro:property name="radius_cylinders" value="0.2" />
+  <xacro:property name="length_box" value="2.0" />
+  <xacro:property name="width_box" value="0.4" />
+
+<!--  Materials definition-->
+  <material name="blue">
+    <color rgba="0 0 1 0.3"/>
+  </material>
+  <material name="green">
+    <color rgba="0 1 0 0.3"/>
+  </material>
+  <material name="red">
+    <color rgba="1 0 0 0.3"/>
+  </material>
+  <material name="non_transparent_white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+<!--  Base link-->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="${height_cylinders}" radius="${radius_cylinders}"/>
+      </geometry>
+      <origin xyz="0 0 ${height_cylinders/2}"/>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+<!--  Link1-->
+  <link name="link1">
+    <visual>
+      <geometry>
+        <box size="${length_box} ${width_box} ${height_cylinders}"/>
+      </geometry>
+      <origin xyz="${length_box/2} 0 ${-height_cylinders/2}"/>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_link1" type="continuous">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <axis xyz="0 0 1" />
+    <origin xyz="0 0 ${height_cylinders*2}" />
+  </joint>
+
+<!--  Link1 visual-->
+  <link name="link1_visual">
+    <visual>
+      <geometry>
+        <cylinder length="${height_cylinders}" radius="${radius_cylinders}"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="link1_to_link1_visual" type="fixed">
+    <parent link="link1"/>
+    <child link="link1_visual"/>
+    <origin xyz="0 0 ${-height_cylinders/2}" />
+  </joint>
+
+<!--  Link2-->
+  <link name="link2">
+    <visual>
+      <geometry>
+        <box size="${length_box} ${width_box} ${height_cylinders}"/>
+      </geometry>
+      <origin xyz="${length_box/2} 0 ${-height_cylinders/2}"/>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint name="link1_to_link2" type="continuous">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <axis xyz="0 0 1" />
+    <origin xyz="${length_box} 0 0"/>
+  </joint>
+
+<!--  Link2 visual A-->
+  <link name="link2_visual_a">
+    <visual>
+      <geometry>
+        <cylinder length="${height_cylinders}" radius="${radius_cylinders}"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint name="link2_to_link2_visual_a" type="fixed">
+    <parent link="link2"/>
+    <child link="link2_visual_a"/>
+    <origin xyz="0 0 ${-height_cylinders/2}" />
+  </joint>
+
+<!--  Link2 visual B-->
+  <link name="link2_visual_b">
+    <visual>
+      <geometry>
+        <cylinder length="${height_cylinders}" radius="${radius_cylinders}"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint name="link2_to_link2_visual_b" type="fixed">
+    <parent link="link2"/>
+    <child link="link2_visual_b"/>
+    <origin xyz="${length_box} 0 ${-height_cylinders/2}" />
+  </joint>
+
+<!--  EE Link-->
+  <link name="EE_link">
+    <visual>
+      <geometry>
+        <cylinder length="${height_cylinder_EE}" radius="${radius_cylinders/2}"/>
+<!--        <mesh filename="package://psr_parte11_scara_description/meshes/mitsubishi_miev.dae"/>-->
+      </geometry>
+      <origin xyz="0 0 ${-height_cylinder_EE/2}"/>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="link2_to_EE_link" type="prismatic">
+    <parent link="link2"/>
+    <child link="EE_link"/>
+    <limit effort="1000.0" lower="${-height_cylinder_EE}" upper="${height_cylinder_EE}" velocity="0.5"/>
+    <axis xyz="0 0 -1"/>
+    <origin rpy="0 0 0" xyz="${length_box} 0 0"/>
+  </joint>
+
+</robot>

@@ -14,10 +14,10 @@
   <xacro:property name="player_color" value="$(arg player_color)"/>
 
   <!-- Include other files-->
-  <xacro:include filename="$(find ${player_name}_description)/urdf/properties.xacro"/>
+  <xacro:include filename="$(find p_ldalcol_description)/urdf/properties.xacro"/>
 
   <!--  <xacro:include filename="$(find ${player_name}_description)/urdf/player.gazebo.xacro"/>-->
-  <xacro:include filename="$(find ${player_name}_description)/urdf/p_ldalcol.gazebo.macro.xacro"/>
+  <xacro:include filename="$(find p_ldalcol_description)/urdf/p_ldalcol.gazebo.macro.xacro"/>
   <xacro:gazebo_macro player_color="${player_color}" laser_visual="false" camera_visual="false" imu_visual="false"/>
 
   <link name="base_footprint"/>

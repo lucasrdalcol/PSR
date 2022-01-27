@@ -36,11 +36,9 @@ if os.name == 'nt':
 else:
     import tty, termios
 
-BURGER_MAX_LIN_VEL = 0.22
+BURGER_MAX_LIN_VEL = 3.22
 BURGER_MAX_ANG_VEL = 2.84
 
-# WAFFLE_MAX_LIN_VEL = 0.26
-# WAFFLE_MAX_ANG_VEL = 1.82
 WAFFLE_MAX_LIN_VEL = 3.26
 WAFFLE_MAX_ANG_VEL = 1.82
 

@@ -58,6 +58,28 @@ class Driver:
             rospy.logerr('Could not transform goal from ' + msg.header.frame_id + ' to ' + target_frame +
                          '. Ignoring this goal.')
 
+    def sendCommandCallback(self, event):
+        """
+        Callback function that send the twist command to the robot (speed and angle needed to go to the goal pose)
+        :param event: not used.
+        """
+        print('Sending twist command')
+
+        # Check if the goal pose is active or not
+        if not self.goal_active:  # No goal, no movement
+            self.speed = 0
+            self.angle = 0
+        else:
+            self.driveStraight()
+
+        # Construct the twist message for the robot with the speed and angle needed
+        twist = Twist()
+        twist.linear.x = self.speed
+        twist.angular.z = self.angle
+
+        # Publish the twist command to the robot
+        self.publisher_command.publish(twist)
+
     def driveStraight(self, minimum_speed=0.1, maximum_speed=0.75):
         """
         Function that receives the goal pose and calculate the speed and angle to drive to that goal.
@@ -85,29 +107,8 @@ class Driver:
         # if the robot is close enough to the goal pose, stop the robot. This is to avoid the robot drive in circles
         # continuously
         if distance_to_goal < 0.08:
-            self.speed = 0
-
-    def sendCommandCallback(self, event):
-        """
-        Callback function that send the twist command to the robot (speed and angle needed to go to the goal pose)
-        :param event: not used.
-        """
-        print('Sending twist command')
-
-        # Check if the goal pose is active or not
-        if not self.goal_active:  # No goal, no movement
-            self.speed = 0
-            self.angle = 0
-        else:
-            self.driveStraight()
-
-        # Construct the twist message for the robot with the speed and angle needed
-        twist = Twist()
-        twist.linear.x = self.speed
-        twist.angular.z = self.angle
-
-        # Publish the twist command to the robot
-        self.publisher_command.publish(twist)
+            self.goal_active = False
+            rospy.loginfo('Robot achieved its goal.')
 
 
 def publisher():

@@ -28,7 +28,9 @@
 
 <!--        Include the visualize.launch if we wish -->
         <group if="$(arg visualize)">
-            <include file="$(find p_ldalcol_bringup)/launch/visualize.launch"/>
+            <include file="$(find p_ldalcol_bringup)/launch/visualize.launch">
+                <arg name="player_name" value="$(arg player_name)"/>
+            </include>
         </group>
     </group>
 

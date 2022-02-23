@@ -7,12 +7,16 @@ import argparse
 import copy
 import math
 import colorama
+import cv2
+import numpy as np
 import rospy
 import tf2_ros
+from cv_bridge import CvBridge, CvBridgeError
 from std_msgs.msg import String
 from psr_parte09_exs.msg import Dog
 from geometry_msgs.msg import Twist
 from tf2_geometry_msgs import PoseStamped
+from sensor_msgs.msg import Image
 
 
 class Driver:
@@ -20,7 +24,6 @@ class Driver:
         # Define all variables
         self.name = rospy.get_name()
         self.name = self.name.strip('/')  # remove initial /
-        print('player name is ' + self.name)
         self.goal = PoseStamped()
         self.goal_active = False
         self.angle = 0
@@ -39,6 +42,44 @@ class Driver:
         # Initialize the subscriber to receive the goal pose with a callback
         self.goal_subscriber = rospy.Subscriber('/move_base_simple/goal', PoseStamped,
                                                 self.goalReceivedCallback)  # Subscribe the node to the specified topic
+
+        # Which is my team
+        self.configureMyTeam(self.name)
+
+        # # Initialize the color segmentation
+        # self.bridge = CvBridge()
+        # self.image_subscriber = rospy.Subscriber('/' + self.name + '/camera/rgb/image_raw', Image,
+        #                                          self.configureColorSegmentationCallback)
+
+    def configureMyTeam(self, player_name):
+        teams = {'red_team': rospy.get_param('/red_players'),
+                 'green_team': rospy.get_param('/green_players'),
+                 'blue_team': rospy.get_param('/blue_players')}
+
+        if self.name in teams['red_team']:
+            teams['my_team'], teams['my_preys'], teams['my_hunters'] = 'red_team', 'green_team', 'blue_team'
+            rospy.loginfo('My name is ' + self.name + '. I am team red, I am hunting ' + str(teams['green_team']) +
+                          ' and I am fleeing from ' + str(teams['blue_team']))
+        elif self.name in teams['green_team']:
+            teams['my_team'], teams['my_preys'], teams['my_hunters'] = 'green_team', 'blue_team', 'red_team'
+            rospy.loginfo('My name is ' + self.name + '. I am team green, I am hunting ' + str(teams['blue_team']) +
+                          ' and I am fleeing from ' + str(teams['red_team']))
+        elif self.name in teams['blue_team']:
+            teams['my_team'], teams['my_preys'], teams['my_hunters'] = 'blue_team', 'red_team', 'green_team'
+            rospy.loginfo('My name is ' + self.name + '. I am team blue, I am hunting ' + str(teams['red_team']) +
+                          ' and I am fleeing from ' + str(teams['green_team']))
+        else:
+            raise rospy.logerr('The player name' + self.name + ' does not fit in any team.')
+
+    # def configureColorSegmentationCallback(self, msg):
+    #     try:
+    #         rgb_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+    #     except CvBridgeError as e:
+    #         print(e)
+    #
+    #     rgb_image = np.array(rgb_image, dtype=np.uint8)
+    #     cv2.imshow("Original image", rgb_image)
+    #     cv2.waitKey(1)
 
     def goalReceivedCallback(self, msg):
         """

@@ -12,7 +12,8 @@
         <arg name="y_pos" default="5.0"/>
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="true"/>
-        <arg name="driver" default="true"/>
+        <arg name="driver" default="false"/>
+        <arg name="teleop" default="true"/>
     </include>
 
     <!--    red2-->
@@ -24,6 +25,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    red3-->
@@ -35,6 +37,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
 
@@ -48,6 +51,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    green2-->
@@ -59,6 +63,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    green3-->
@@ -70,6 +75,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    BLUE TEAM-->
@@ -82,6 +88,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    blue2-->
@@ -93,6 +100,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
     <!--    blue3-->
@@ -104,6 +112,7 @@
         <arg name="z_pos" default="0.0"/>
         <arg name="visualize" default="false"/>
         <arg name="driver" default="false"/>
+        <arg name="teleop" default="false"/>
     </include>
 
 </launch>
